@@ -1,0 +1,24 @@
+{
+  "name": "parachute",
+  "version": "1.0.0",
+  "description": "Transfer files between machines",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nimatullo/parachute.git"
+  },
+  "author": "nimatullo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nimatullo/parachute/issues"
+  },
+  "homepage": "https://github.com/nimatullo/parachute#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "express-fileupload": "^1.4.0",
+    "ws": "^8.8.0"
+  }
+}
