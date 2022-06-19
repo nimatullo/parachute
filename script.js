@@ -1,3 +1,4 @@
+let id = "";
 const me = document.getElementsByClassName("me")[0];
 const uploadButton = document.getElementById("upload");
 const pairStatus = document.getElementById("pair-status");
@@ -63,17 +64,23 @@ function handleIncommingMessage(message) {
       break;
     case "new-connection":
       if (me.innerHTML === "") {
-        me.innerHTML = message.id;
+        me.innerHTML = message.connectionInfo.name;
+        id = message.connectionInfo.id;
       }
       break;
     case "ready":
-      isReady = true;
-      uploadButton.disabled = false;
-      pairStatus.innerHTML = "✅ Ready";
+      handleReady(message.pairs);
       break;
     default:
       console.log("Unknown message type:", message.type);
   }
+}
+
+function handleReady(data) {
+  isReady = true;
+  uploadButton.disabled = false;
+  const otherPair = data.find((pair) => pair.id !== id);
+  pairStatus.innerHTML = `✅ Ready. Paired with <strong>${otherPair.name}</strong>`;
 }
 
 function downloadFile(file) {

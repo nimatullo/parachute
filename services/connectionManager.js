@@ -8,22 +8,45 @@ class ConnectionManager {
   addConnection(socket, request) {
     const remoteAddress = this.setIp(request);
     console.log("New incoming connection", remoteAddress);
-    let id;
+    let connectionInfo = {};
 
     socket.on("message", this.onMessage);
 
     if (!this.connections[remoteAddress]) {
       this.connections[remoteAddress] = new Pair(socket);
-      id = this.connections[remoteAddress].firstConnection.id;
+
+      connectionInfo = {
+        id: this.connections[remoteAddress].firstConnection.id,
+        name: this.connections[remoteAddress].firstConnection.name,
+      };
     } else {
       this.connections[remoteAddress].addSecondConnection(socket);
-      id = this.connections[remoteAddress].secondConnection.id;
+
+      connectionInfo = {
+        id: this.connections[remoteAddress].secondConnection.id,
+        name: this.connections[remoteAddress].secondConnection.name,
+      };
     }
 
-    this.send({ type: "new-connection", id: id }, remoteAddress);
+    this.send({ type: "new-connection", connectionInfo }, remoteAddress);
 
     if (this.connections[remoteAddress].isReady()) {
-      this.send({ type: "ready" }, remoteAddress);
+      this.send(
+        {
+          type: "ready",
+          pairs: [
+            {
+              id: this.connections[remoteAddress].firstConnection.id,
+              name: this.connections[remoteAddress].firstConnection.name,
+            },
+            {
+              id: this.connections[remoteAddress].secondConnection.id,
+              name: this.connections[remoteAddress].secondConnection.name,
+            },
+          ],
+        },
+        remoteAddress
+      );
     }
   }
 
@@ -49,7 +72,7 @@ class ConnectionManager {
         return;
       }
       pair.getBoth().forEach((connection) => {
-        connection.socket.send(JSON.stringify(message));
+        if (connection) connection.socket.send(JSON.stringify(message));
       });
     } catch (e) {
       console.log(e);
