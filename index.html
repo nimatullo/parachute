@@ -7,12 +7,24 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>Hello, world</h1>
+    <div>
+      <h1>Parachute</h1>
+    </div>
     <button id="connect">Connect</button>
     <p>
       WebSocket Connection:
       <span id="status"> Unsuccessful </span>
     </p>
+    <div class="me"></div>
+    <div>
+      <label for="button" id="pair-status"
+        >🔴 Waiting for pair connection...</label
+      >
+      <div>
+        <input type="file" name="file" id="file" />
+        <button type="submit" id="upload">Upload</button>
+      </div>
+    </div>
   </body>
   <script src="script.js"></script>
 </html>
