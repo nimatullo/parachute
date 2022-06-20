@@ -6,5 +6,14 @@ module.exports = class Connection {
     this.id = uuid();
     this.name = generateName();
     this.socket = socket;
+    this.lastPing = Date.now();
+    this.timer = 0;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+    };
   }
 };

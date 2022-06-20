@@ -5,81 +5,79 @@ class ConnectionManager {
     this.connections = {};
   }
 
-  addConnection(socket, request) {
-    const remoteAddress = this.setIp(request);
+  onConnection(socket, request) {
+    const remoteAddress = this.getIp(request);
     console.log("New incoming connection", remoteAddress);
-    let connectionInfo = {};
 
-    socket.on("message", this.onMessage);
+    const connection = this.addToConnections(socket, remoteAddress);
+    socket.on("message", (message) => this.onMessage(remoteAddress, message));
 
+    this.send(
+      { type: "new-connection", connectionInfo: connection.toJSON() },
+      connection
+    );
+
+    this.startHeartbeat(connection, remoteAddress);
+
+    // If a pair has 2 connections, let them know that they are ready
+    if (this.connections[remoteAddress].isReady())
+      this.emitReady(this.connections[remoteAddress]);
+  }
+
+  addToConnections(socket, remoteAddress) {
     if (!this.connections[remoteAddress]) {
-      this.connections[remoteAddress] = new Pair(socket);
+      const pair = new Pair(socket);
+      this.connections[remoteAddress] = pair;
 
-      connectionInfo = {
-        id: this.connections[remoteAddress].firstConnection.id,
-        name: this.connections[remoteAddress].firstConnection.name,
-      };
+      return pair.firstConnection;
     } else {
-      this.connections[remoteAddress].addSecondConnection(socket);
+      const pair = this.connections[remoteAddress];
+      pair.addSecondConnection(socket);
 
-      connectionInfo = {
-        id: this.connections[remoteAddress].secondConnection.id,
-        name: this.connections[remoteAddress].secondConnection.name,
-      };
+      return pair.secondConnection;
     }
+  }
 
-    this.send({ type: "new-connection", connectionInfo }, remoteAddress);
+  removeConnection(id, origin) {
+    const leftOverConnection = this.connections[origin].removeConnection(id);
 
-    if (this.connections[remoteAddress].isReady()) {
-      this.send(
-        {
-          type: "ready",
-          pairs: [
-            {
-              id: this.connections[remoteAddress].firstConnection.id,
-              name: this.connections[remoteAddress].firstConnection.name,
-            },
-            {
-              id: this.connections[remoteAddress].secondConnection.id,
-              name: this.connections[remoteAddress].secondConnection.name,
-            },
-          ],
-        },
-        remoteAddress
+    if (!leftOverConnection) {
+      delete this.connections[origin];
+    } else {
+      this.send({ type: "left-connection" }, leftOverConnection);
+    }
+  }
+
+  onMessage(origin, message) {
+    message = JSON.parse(message);
+    switch (message.type) {
+      case "pong":
+        this.connections[origin].getById(message.from).lastPing = Date.now();
+        break;
+      case "disconnected":
+        this.removeConnection(message.from, origin);
+        break;
+      default:
+        console.log("Unknown message type", message.type);
+    }
+  }
+
+  emitReady(pair) {
+    pair
+      .getBoth()
+      .forEach((connection) =>
+        this.send({ type: "ready", pairs: pair.toJSON() }, connection)
       );
-    }
   }
 
-  removeConnection(id, request) {
-    const remoteAddress = this.setIp(request);
-    console.log("Removing connection", remoteAddress);
-    this.connections[remoteAddress].removeConnection(id);
+  send(message, connection) {
+    if (!connection) return;
 
-    if (this.connections[remoteAddress].isEmpty()) {
-      delete this.connections[remoteAddress];
-    }
+    message = JSON.stringify(message);
+    connection.socket.send(message);
   }
 
-  onMessage(message) {
-    console.log(`Received: ${message}`);
-  }
-
-  send(message, origin) {
-    try {
-      const pair = this.connections[origin];
-      if (!pair) {
-        console.log("No pair found or not ready: ", origin);
-        return;
-      }
-      pair.getBoth().forEach((connection) => {
-        if (connection) connection.socket.send(JSON.stringify(message));
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  setIp(req) {
+  getIp(req) {
     let ip = "";
     if (req.headers["x-forwarded-for"]) {
       ip = req.headers["x-forwarded-for"];
@@ -112,6 +110,28 @@ class ConnectionManager {
       ip.startsWith("172.") ||
       ip.startsWith("169.")
     );
+  }
+
+  startHeartbeat(connection, origin) {
+    this.endHeartbeat(connection);
+    const timeout = 30000; // 30 seconds
+    if (!connection.lastPing) connection.lastPing = Date.now();
+
+    if (Date.now() - connection.lastPing > 2 * timeout) {
+      this.removeConnection(connection.id, origin);
+      return;
+    }
+
+    this.send({ type: "ping" }, connection);
+
+    connection.timer = setTimeout(
+      () => this.startHeartbeat(connection, origin),
+      timeout
+    );
+  }
+
+  endHeartbeat(connection) {
+    if (connection.timer) clearTimeout(connection.timer);
   }
 }
 

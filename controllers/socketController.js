@@ -6,9 +6,9 @@ const manager = new ConnectionManager();
 
 const wss = new WebSocket.Server({ port: 3030 });
 
-wss.on("connection", (socket, request) => {
-  manager.addConnection(socket, request);
-});
+wss.on("connection", (socket, req) => manager.onConnection(socket, req));
+
+wss.on("close", (socket, req) => console.log("Connection closed", socket));
 
 router.post("/upload", (req, res) => {
   const originIp = manager.setIp(req);

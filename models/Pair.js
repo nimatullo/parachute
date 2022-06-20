@@ -15,10 +15,12 @@ module.exports = class Pair {
   }
 
   removeConnection(id) {
-    if (this.firstConnection.id === id) {
+    if (this.firstConnection?.id === id) {
       this.firstConnection = null;
-    } else if (this.secondConnection.id === id) {
+      return this.secondConnection;
+    } else if (this.secondConnection?.id === id) {
       this.secondConnection = null;
+      return this.firstConnection;
     }
   }
 
@@ -28,5 +30,17 @@ module.exports = class Pair {
 
   getBoth() {
     return [this.firstConnection, this.secondConnection];
+  }
+
+  getById(id) {
+    if (this.firstConnection?.id === id) {
+      return this.firstConnection;
+    } else if (this.secondConnection?.id === id) {
+      return this.secondConnection;
+    }
+  }
+
+  toJSON() {
+    return [this.firstConnection.toJSON(), this.secondConnection.toJSON()];
   }
 };

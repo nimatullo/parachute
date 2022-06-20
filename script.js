@@ -19,6 +19,10 @@ window.addEventListener("load", () => {
   uploadButton.disabled = true;
 });
 
+window.addEventListener("beforeunload", () => {
+  ws.send(JSON.stringify({ type: "disconnected", from: id }));
+});
+
 // Make a post request to the server to upload a file
 // Endpoint is /upload
 function uploadFile() {
@@ -55,6 +59,11 @@ function connectToWebSocket() {
   ws.onmessage = function (evt) {
     handleIncommingMessage(JSON.parse(evt.data));
   };
+
+  ws.onclose = function () {
+    const status = document.getElementById("status");
+    status.innerHTML = "Disconnected";
+  };
 }
 
 function handleIncommingMessage(message) {
@@ -66,10 +75,17 @@ function handleIncommingMessage(message) {
       if (me.innerHTML === "") {
         me.innerHTML = message.connectionInfo.name;
         id = message.connectionInfo.id;
+        console.log(id);
       }
       break;
     case "ready":
       handleReady(message.pairs);
+      break;
+    case "ping":
+      ws.send(JSON.stringify({ type: "pong", from: id }));
+      break;
+    case "left-connection":
+      handleUnready();
       break;
     default:
       console.log("Unknown message type:", message.type);
@@ -81,6 +97,12 @@ function handleReady(data) {
   uploadButton.disabled = false;
   const otherPair = data.find((pair) => pair.id !== id);
   pairStatus.innerHTML = `✅ Ready. Paired with <strong>${otherPair.name}</strong>`;
+}
+
+function handleUnready() {
+  isReady = false;
+  uploadButton.disabled = true;
+  pairStatus.innerHTML = "🔴 Waiting for pair connection...";
 }
 
 function downloadFile(file) {
