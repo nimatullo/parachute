@@ -6,6 +6,9 @@ module.exports = class Pair {
   }
 
   addConnection(socket) {
+    if (this._connections.length === 2) {
+      throw new Error("Pair is already full");
+    }
     this._connections.push(new Connection(socket));
   }
 
