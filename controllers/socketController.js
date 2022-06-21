@@ -4,7 +4,7 @@ const WebSocket = require("ws");
 const ConnectionManager = require("../services/connectionManager");
 const manager = new ConnectionManager();
 
-const wss = new WebSocket.Server({ port: 8000 });
+const wss = new WebSocket.Server({ port: 3030 });
 
 wss.on("connection", (socket, req) => manager.onConnection(socket, req));
 
