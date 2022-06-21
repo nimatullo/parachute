@@ -31,7 +31,7 @@ function uploadFile() {
   const formData = new FormData();
   formData.append("file", file);
 
-  fetch("http://192.168.1.250:8000/upload", {
+  fetch("/upload", {
     method: "POST",
     body: formData,
     // Headers to send the file name
@@ -57,7 +57,7 @@ function connectToWebSocket() {
   };
 
   ws.onmessage = function (evt) {
-    handleIncommingMessage(JSON.parse(evt.data));
+    handleIncomingMessage(JSON.parse(evt.data));
   };
 
   ws.onclose = function () {
