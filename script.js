@@ -66,10 +66,10 @@ function connectToWebSocket() {
   };
 }
 
-function handleIncommingMessage(message) {
+function handleIncomingMessage(message) {
   switch (message.type) {
     case "file":
-      if (message.from !== me.innerHTML) downloadFile(message.data);
+      if (message.from !== me.innerHTML) downloadFile(message.data); // Origin is from other connection in pair
       break;
     case "new-connection":
       if (me.innerHTML === "") {
