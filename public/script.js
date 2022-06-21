@@ -49,7 +49,7 @@ function uploadFile() {
 }
 
 function connectToWebSocket() {
-  ws = new WebSocket("ws://localhost:3030/");
+  ws = new WebSocket("ws://3030/");
 
   ws.onopen = function () {
     const status = document.getElementById("status");
@@ -111,4 +111,8 @@ function downloadFile(file) {
   a.href = URL.createObjectURL(new Blob([bytes], { type: file.mime }));
   a.download = `${file.name}`;
   a.click();
+}
+
+function getWSEndpoint() {
+  return location.origin.replace(/^http/, "ws") + "/";
 }
