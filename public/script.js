@@ -114,5 +114,5 @@ function downloadFile(file) {
 }
 
 function getWSEndpoint() {
-  return location.origin.replace(/^http/, "ws") + "/";
+  return location.origin.replace(/^https/, "ws") + "/";
 }
