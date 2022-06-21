@@ -49,7 +49,7 @@ function uploadFile() {
 }
 
 function connectToWebSocket() {
-  ws = new WebSocket("ws://192.168.1.250:3030/");
+  ws = new WebSocket("ws://localhost:3030/");
 
   ws.onopen = function () {
     const status = document.getElementById("status");
