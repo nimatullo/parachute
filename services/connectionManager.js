@@ -25,17 +25,15 @@ class ConnectionManager {
   }
 
   addToConnections(socket, remoteAddress) {
+    var pair;
     if (!this.connections[remoteAddress]) {
-      const pair = new Pair(socket);
+      pair = new Pair(socket);
       this.connections[remoteAddress] = pair;
-
-      return pair.firstConnection;
     } else {
-      const pair = this.connections[remoteAddress];
-      pair.addSecondConnection(socket);
-
-      return pair.secondConnection;
+      pair = this.connections[remoteAddress];
+      pair.addConnection(socket);
     }
+    return pair.lastConnection;
   }
 
   removeConnection(id, origin) {
@@ -63,15 +61,22 @@ class ConnectionManager {
   }
 
   emitReady(pair) {
-    pair
-      .getBoth()
-      .forEach((connection) =>
-        this.send({ type: "ready", pairs: pair.toJSON() }, connection)
-      );
+    pair.connections.forEach((connection) =>
+      this.send({ type: "ready", pairs: pair.toJSON() }, connection)
+    );
+  }
+
+  sendFile(file, origin, id) {
+    const connection = this.connections[origin].getPeer(id);
+
+    this.send(file, connection);
   }
 
   send(message, connection) {
-    if (!connection) return;
+    if (!connection) {
+      console.log("Connection not found");
+      return;
+    }
 
     message = JSON.stringify(message);
     connection.socket.send(message);

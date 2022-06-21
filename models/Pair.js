@@ -2,45 +2,48 @@ const Connection = require("./Connection");
 
 module.exports = class Pair {
   constructor(socket) {
-    this.firstConnection = new Connection(socket);
-    this.secondConnection = null;
+    this._connections = [new Connection(socket)];
   }
 
-  addSecondConnection(socket) {
-    this.secondConnection = new Connection(socket);
+  addConnection(socket) {
+    this._connections.push(new Connection(socket));
   }
 
   isReady() {
-    return this.firstConnection && this.secondConnection;
+    return (
+      this._connections.length === 2 &&
+      this._connections.every((connection) => connection.isReady())
+    );
   }
 
   removeConnection(id) {
-    if (this.firstConnection?.id === id) {
-      this.firstConnection = null;
-      return this.secondConnection;
-    } else if (this.secondConnection?.id === id) {
-      this.secondConnection = null;
-      return this.firstConnection;
-    }
+    this._connections = this._connections.filter((connection) => {
+      return connection.id !== id;
+    });
+    return this.lastConnection;
   }
 
   isEmpty() {
-    return this.firstConnection === null && this.secondConnection === null;
+    return this._connections.length === 0;
   }
 
-  getBoth() {
-    return [this.firstConnection, this.secondConnection];
+  get connections() {
+    return this._connections;
+  }
+
+  get lastConnection() {
+    return this._connections[this.connections.length - 1];
+  }
+
+  getPeer(id) {
+    return this._connections.find((connection) => connection.id !== id);
   }
 
   getById(id) {
-    if (this.firstConnection?.id === id) {
-      return this.firstConnection;
-    } else if (this.secondConnection?.id === id) {
-      return this.secondConnection;
-    }
+    return this._connections.find((connection) => connection.id === id);
   }
 
   toJSON() {
-    return [this.firstConnection.toJSON(), this.secondConnection.toJSON()];
+    return this._connections.map((connection) => connection.toJSON());
   }
 };

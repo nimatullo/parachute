@@ -36,7 +36,7 @@ function uploadFile() {
     body: formData,
     // Headers to send the file name
     headers: {
-      "X-Origin-Id": me.innerHTML,
+      "X-Origin-Id": id,
     },
   })
     .then((response) => response.json())

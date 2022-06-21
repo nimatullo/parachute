@@ -1,5 +1,6 @@
 const { v4: uuid } = require("uuid");
 const generateName = require("../services/generator");
+const WebSocket = require("ws");
 
 module.exports = class Connection {
   constructor(socket) {
@@ -15,5 +16,9 @@ module.exports = class Connection {
       id: this.id,
       name: this.name,
     };
+  }
+
+  isReady() {
+    return this.socket.readyState === WebSocket.OPEN;
   }
 };

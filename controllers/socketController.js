@@ -11,7 +11,7 @@ wss.on("connection", (socket, req) => manager.onConnection(socket, req));
 wss.on("close", (socket, req) => console.log("Connection closed", socket));
 
 router.post("/upload", (req, res) => {
-  const originIp = manager.setIp(req);
+  const originIp = manager.getIp(req);
   const originId = req.headers["x-origin-id"];
 
   const file = req.files.file;
@@ -24,13 +24,14 @@ router.post("/upload", (req, res) => {
     ext: file.mimetype.split("/")[1],
   };
 
-  manager.send(
+  manager.sendFile(
     {
       type: "file",
       data: data,
       from: originId,
     },
-    originIp
+    originIp,
+    originId
   );
 
   res.status(200).json({ message: `File ${fileName} uploaded` });
