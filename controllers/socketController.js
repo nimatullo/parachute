@@ -1,14 +1,6 @@
 const express = require("express");
-const router = express.Router();
-const WebSocket = require("ws");
 const ConnectionManager = require("../services/connectionManager");
-const manager = new ConnectionManager();
-
-const wss = new WebSocket.Server({ port: 3030 });
-
-wss.on("connection", (socket, req) => manager.onConnection(socket, req));
-
-wss.on("close", (socket, req) => console.log("Connection closed", socket));
+const router = express.Router();
 
 router.post("/upload", (req, res) => {
   const originIp = manager.getIp(req);
@@ -24,7 +16,7 @@ router.post("/upload", (req, res) => {
     ext: file.mimetype.split("/")[1],
   };
 
-  manager.sendFile(
+  ConnectionManager.sendFile(
     {
       type: "file",
       data: data,
