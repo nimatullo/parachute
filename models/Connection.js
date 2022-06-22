@@ -9,12 +9,14 @@ module.exports = class Connection {
     this.socket = socket;
     this.lastPing = Date.now();
     this.timer = 0;
+    this.device = null;
   }
 
   toJSON() {
     return {
       id: this.id,
       name: this.name,
+      device: this.device,
     };
   }
 

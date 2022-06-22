@@ -13,6 +13,17 @@ class SocketClientManager {
     this.ws.onmessage = this.handleIncomingMessage.bind(this);
   }
 
+  sendDeviceInfo() {
+    const deviceInfo = this._ui.getDevice();
+    this.ws.send(
+      JSON.stringify({
+        type: "device-info",
+        from: this.id,
+        deviceInfo: deviceInfo,
+      })
+    );
+  }
+
   disconnect() {
     this.ws.send(JSON.stringify({ type: "disconnected", from: this.id }));
     this.ws.close();
@@ -54,6 +65,7 @@ class SocketClientManager {
     this.isReady = true;
     const otherPair = pairs.find((pair) => pair.id !== this.id);
     this._ui.ready(otherPair.name, this.upload.bind(this));
+    this._ui.setDevice(otherPair.device);
   }
 
   handleDownload(file) {
@@ -66,6 +78,7 @@ class SocketClientManager {
     if (this.id) return;
     this.id = connectionInfo.id;
     this._ui.setName(connectionInfo.name);
+    this.sendDeviceInfo();
   }
 
   get UI() {

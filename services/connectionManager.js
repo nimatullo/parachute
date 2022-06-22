@@ -56,9 +56,16 @@ class ConnectionManager {
       case "disconnected":
         this.removeConnection(message.from, origin);
         break;
+      case "device-info":
+        this.updateDeviceInfo(message.deviceInfo, origin, message.from);
+        break;
       default:
         console.log("Unknown message type", message.type);
     }
+  }
+
+  updateDeviceInfo(deviceInfo, origin, id) {
+    this.connections[origin].getById(id).device = deviceInfo;
   }
 
   emitReady(pair) {

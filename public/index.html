@@ -4,25 +4,37 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <title>Parachute</title>
   </head>
   <body>
-    <div>
-      <h1>Parachute</h1>
-    </div>
-    <p>
-      WebSocket Connection:
-      <span id="status"> Unsuccessful </span>
-    </p>
-    <div id="me"></div>
-    <div>
-      <label for="button" id="pair-status"
-        >🔴 Waiting for pair connection...</label
-      >
+    <div class="main">
+      <p>
+        WebSocket Connection:
+        <span id="status"> Unsuccessful </span>
+      </p>
+      <div id="me"></div>
       <div>
-        <input type="file" name="file" id="file" />
-        <button disabled="true" type="submit" id="upload-button">Upload</button>
+        <label for="button" id="pair-status"
+          >🔴 Waiting for pair connection...</label
+        >
+        <div class="upload-container">
+          <div class="upload-area">
+            <input type="file" name="file" id="file" class="file-selector" />
+            <label for="file">
+              <img
+                src="https://img.icons8.com/material/96/bfc1c2/upload--v1.png"
+              />
+              <p>Select a file to upload</p>
+            </label>
+          </div>
+
+          <button disabled="true" type="submit" id="upload-button" class="btn">
+            Upload
+          </button>
+        </div>
       </div>
+      <p id="device"></p>
     </div>
   </body>
   <script type="module" src="scripts/script.js"></script>
