@@ -7,7 +7,7 @@ window.addEventListener("load", () => {
   connections.connect();
 });
 
-window.addEventListener("beforeunload", () => connections.handleDisconnect());
+window.addEventListener("beforeunload", () => connections.disconnect());
 
 function getWSEndpoint() {
   return location.origin.replace(/^http/, "ws") + "/";

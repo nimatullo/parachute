@@ -13,6 +13,11 @@ class SocketClientManager {
     this.ws.onmessage = this.handleIncomingMessage.bind(this);
   }
 
+  disconnect() {
+    this.ws.send(JSON.stringify({ type: "disconnected", from: this.id }));
+    this.ws.close();
+  }
+
   handleIncomingMessage(evt) {
     const message = JSON.parse(evt.data);
     switch (message.type) {
@@ -61,11 +66,6 @@ class SocketClientManager {
     if (this.id) return;
     this.id = connectionInfo.id;
     this._ui.setName(connectionInfo.name);
-  }
-
-  handleDisconnect() {
-    this.ws.send(JSON.stringify({ type: "disconnected", from: this.id }));
-    this.ws.close();
   }
 
   get UI() {
