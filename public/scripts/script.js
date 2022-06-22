@@ -1,96 +1,13 @@
 import SocketClientManager from "./socket.js";
 
-var ui = null;
 var connections = null;
 
 window.addEventListener("load", () => {
   connections = new SocketClientManager(getWSEndpoint());
   connections.connect();
-  // connectToWebSocket();
-  // const connectButton = document.getElementById("connect");
-  // connectButton.addEventListener("click", () => {
-  //   // Change background to red
-  //   connectToWebSocket();
-  // });
-
-  // uploadButton.addEventListener("click", () => {
-  //   uploadFile();
-  // });
-  // uploadButton.disabled = true;
 });
 
-window.addEventListener("beforeunload", () => {
-  ws.send(JSON.stringify({ type: "disconnected", from: id }));
-});
-
-// Make a post request to the server to upload a file
-// Endpoint is /upload
-function uploadFile() {}
-
-function connectToWebSocket() {
-  ws = new WebSocket(getWSEndpoint());
-
-  ws.onopen = function () {
-    const status = document.getElementById("status");
-    status.innerHTML = "Connected";
-  };
-
-  ws.onmessage = function (evt) {
-    handleIncomingMessage(JSON.parse(evt.data));
-  };
-
-  ws.onclose = function () {
-    const status = document.getElementById("status");
-    status.innerHTML = "Disconnected";
-  };
-}
-
-function handleIncomingMessage(message) {
-  switch (message.type) {
-    case "file":
-      if (message.from !== me.innerHTML) downloadFile(message.data); // Origin is from other connection in pair
-      break;
-    case "new-connection":
-      if (me.innerHTML === "") {
-        me.innerHTML = message.connectionInfo.name;
-        id = message.connectionInfo.id;
-        console.log(id);
-      }
-      break;
-    case "ready":
-      handleReady(message.pairs);
-      break;
-    case "ping":
-      ws.send(JSON.stringify({ type: "pong", from: id }));
-      break;
-    case "left-connection":
-      handleUnready();
-      break;
-    default:
-      console.log("Unknown message type:", message.type);
-  }
-}
-
-function handleReady(data) {
-  isReady = true;
-  uploadButton.disabled = false;
-  const otherPair = data.find((pair) => pair.id !== id);
-  pairStatus.innerHTML = `✅ Ready. Paired with <strong>${otherPair.name}</strong>`;
-}
-
-function handleUnready() {
-  isReady = false;
-  uploadButton.disabled = true;
-  pairStatus.innerHTML = "🔴 Waiting for pair connection...";
-}
-
-function downloadFile(file) {
-  const bytes = new Uint8Array(file.blob.data);
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([bytes], { type: file.mime }));
-  a.download = `${file.name}`;
-  a.click();
-}
+window.addEventListener("beforeunload", () => connections.handleDisconnect());
 
 function getWSEndpoint() {
   return location.origin.replace(/^http/, "ws") + "/";

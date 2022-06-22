@@ -63,6 +63,11 @@ class SocketClientManager {
     this._ui.setName(connectionInfo.name);
   }
 
+  handleDisconnect() {
+    this.ws.send(JSON.stringify({ type: "disconnected", from: this.id }));
+    this.ws.close();
+  }
+
   get UI() {
     return this._ui;
   }
