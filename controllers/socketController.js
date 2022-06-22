@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ConnectionManager = require("../services/connectionManager");
 const manager = new ConnectionManager();
+const IpParser = require("../services/ipParser");
 
 router.post("/upload", (req, res) => {
   const originIp = IpParser.parse(req);
@@ -17,7 +18,7 @@ router.post("/upload", (req, res) => {
     ext: file.mimetype.split("/")[1],
   };
 
-  ConnectionManager.sendFile(
+  manager.sendFile(
     {
       type: "file",
       data: data,

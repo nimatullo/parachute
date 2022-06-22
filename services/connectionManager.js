@@ -13,7 +13,7 @@ class ConnectionManager {
     const connection = this.addToConnections(socket, remoteAddress);
     socket.on("message", (message) => this.onMessage(remoteAddress, message));
 
-    ConnectionManager.send(
+    this.send(
       { type: "new-connection", connectionInfo: connection.toJSON() },
       connection
     );
@@ -63,20 +63,17 @@ class ConnectionManager {
 
   emitReady(pair) {
     pair.connections.forEach((connection) =>
-      ConnectionManager.send(
-        { type: "ready", pairs: pair.toJSON() },
-        connection
-      )
+      this.send({ type: "ready", pairs: pair.toJSON() }, connection)
     );
   }
 
   sendFile(file, origin, id) {
     const connection = this.connections[origin].getPeer(id);
 
-    ConnectionManager.send(file, connection);
+    this.send(file, connection);
   }
 
-  static send(message, connection) {
+  send(message, connection) {
     if (!connection) {
       console.log("Connection not found");
       return;
@@ -96,7 +93,7 @@ class ConnectionManager {
       return;
     }
 
-    ConnectionManager.send({ type: "ping" }, connection);
+    this.send({ type: "ping" }, connection);
 
     connection.timer = setTimeout(
       () => this.startHeartbeat(connection, origin),
