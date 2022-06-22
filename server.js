@@ -1,7 +1,9 @@
 const express = require("express");
+const http = require("http");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const fs = require("fs");
+const WebSocket = require("ws");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -12,13 +14,20 @@ app.use(cors());
 app.use(fileUpload());
 app.use(express.static("public"));
 
-app.use("/", socketController);
+app.use("/", socketController.router);
 
 app.use("/", (req, res) => {
   res.writeHead(200, { "Content-Type": "text/html" });
   fs.createReadStream("public/index.html").pipe(res);
 });
 
-app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+const server = http.createServer(app);
+
+const wss = new WebSocket.Server({ server });
+wss.on("connection", (socket, req) =>
+  socketController.manager.onConnection(socket, req)
+);
+
+server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 
 module.exports = app;
