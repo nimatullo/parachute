@@ -13,14 +13,14 @@ class IpParser {
     }
 
     // Check if IP is private
-    if (this.isIpPrivate(ip)) {
+    if (IpParser.isIpPrivate(ip)) {
       ip = "priv";
     }
 
     return ip;
   }
 
-  isIpPrivate(ip) {
+  static isIpPrivate(ip) {
     // Check if ip is in IPv6 format
     if (ip.indexOf(":") !== -1) {
       // Convert ip to IPv4 format
