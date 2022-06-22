@@ -1,5 +1,5 @@
 const Pair = require("../models/Pair");
-const IpParser = require("./ipParser");
+const IpParser = require("../utils/ipParser");
 
 class ConnectionManager {
   constructor() {

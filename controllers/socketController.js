@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ConnectionManager = require("../services/connectionManager");
 const manager = new ConnectionManager();
-const IpParser = require("../services/ipParser");
+const IpParser = require("../utils/ipParser");
 
 router.post("/upload", (req, res) => {
   const originIp = IpParser.parse(req);
