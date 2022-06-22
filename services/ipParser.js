@@ -1,5 +1,5 @@
-class IpChecker {
-  static getIp(req) {
+class IpParser {
+  static parse(req) {
     let ip = "";
     if (req.headers["x-forwarded-for"]) {
       ip = req.headers["x-forwarded-for"];
@@ -34,3 +34,5 @@ class IpChecker {
     );
   }
 }
+
+module.exports = IpParser;

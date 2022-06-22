@@ -1,5 +1,5 @@
 const Pair = require("../models/Pair");
-const IpChecker = require("./ipChecker");
+const IpParser = require("./ipParser");
 
 class ConnectionManager {
   constructor() {
@@ -7,7 +7,7 @@ class ConnectionManager {
   }
 
   onConnection(socket, request) {
-    const remoteAddress = IpChecker.getIp(request);
+    const remoteAddress = IpParser.parse(request);
     console.log("New incoming connection", remoteAddress);
 
     const connection = this.addToConnections(socket, remoteAddress);
