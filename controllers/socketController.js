@@ -1,7 +1,7 @@
 const express = require("express");
-const ConnectionManager = require("../services/connectionManager");
 const router = express.Router();
-const IpParser = require("../services/ipParser");
+const ConnectionManager = require("../services/connectionManager");
+const manager = new ConnectionManager();
 
 router.post("/upload", (req, res) => {
   const originIp = IpParser.parse(req);
@@ -30,4 +30,7 @@ router.post("/upload", (req, res) => {
   res.status(200).json({ message: `File ${fileName} uploaded` });
 });
 
-module.exports = router;
+module.exports = {
+  router: router,
+  manager: manager,
+};
