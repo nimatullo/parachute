@@ -1,9 +1,10 @@
 const express = require("express");
 const ConnectionManager = require("../services/connectionManager");
 const router = express.Router();
+const IpChecker = require("../services/ipChecker");
 
 router.post("/upload", (req, res) => {
-  const originIp = manager.getIp(req);
+  const originIp = IpChecker.getIp(req);
   const originId = req.headers["x-origin-id"];
 
   const file = req.files.file;
