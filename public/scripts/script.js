@@ -1,22 +1,22 @@
-let id = "";
-const me = document.getElementsByClassName("me")[0];
-const uploadButton = document.getElementById("upload");
-const pairStatus = document.getElementById("pair-status");
-var ws = null;
-let isReady = false;
+import SocketClientManager from "./socket.js";
+
+var ui = null;
+var connections = null;
 
 window.addEventListener("load", () => {
-  connectToWebSocket();
-  const connectButton = document.getElementById("connect");
-  connectButton.addEventListener("click", () => {
-    // Change background to red
-    connectToWebSocket();
-  });
+  connections = new SocketClientManager(getWSEndpoint());
+  connections.connect();
+  // connectToWebSocket();
+  // const connectButton = document.getElementById("connect");
+  // connectButton.addEventListener("click", () => {
+  //   // Change background to red
+  //   connectToWebSocket();
+  // });
 
-  uploadButton.addEventListener("click", () => {
-    uploadFile();
-  });
-  uploadButton.disabled = true;
+  // uploadButton.addEventListener("click", () => {
+  //   uploadFile();
+  // });
+  // uploadButton.disabled = true;
 });
 
 window.addEventListener("beforeunload", () => {
@@ -25,28 +25,7 @@ window.addEventListener("beforeunload", () => {
 
 // Make a post request to the server to upload a file
 // Endpoint is /upload
-function uploadFile() {
-  const file = document.getElementById("file").files[0];
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  fetch("/upload", {
-    method: "POST",
-    body: formData,
-    // Headers to send the file name
-    headers: {
-      "X-Origin-Id": id,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
+function uploadFile() {}
 
 function connectToWebSocket() {
   ws = new WebSocket(getWSEndpoint());
