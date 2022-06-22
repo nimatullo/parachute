@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const ConnectionManager = require("../services/connectionManager");
 const manager = new ConnectionManager();
+const IpParser = require("../utils/ipParser");
 
 router.post("/upload", (req, res) => {
-  const originIp = manager.getIp(req);
+  const originIp = IpParser.parse(req);
   const originId = req.headers["x-origin-id"];
 
   const file = req.files.file;

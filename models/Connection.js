@@ -1,5 +1,5 @@
 const { v4: uuid } = require("uuid");
-const generateName = require("../services/generator");
+const generateName = require("../utils/generator");
 const WebSocket = require("ws");
 
 module.exports = class Connection {
