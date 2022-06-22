@@ -57,7 +57,7 @@ class SocketClientManager {
   }
 
   handleDownload(file) {
-    const bytes = new Uint8Array(file);
+    const bytes = new Uint8Array(file.blob.data);
     const blob = new Blob([bytes], { type: file.mime });
     this._ui.startDownload(blob, file.name);
   }
