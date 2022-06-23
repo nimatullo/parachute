@@ -4,27 +4,44 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <title>Parachute</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪂</text></svg>"
+    />
   </head>
   <body>
-    <div>
-      <h1>Parachute</h1>
-    </div>
-    <button id="connect">Connect</button>
-    <p>
-      WebSocket Connection:
-      <span id="status"> Unsuccessful </span>
-    </p>
-    <div class="me"></div>
-    <div>
-      <label for="button" id="pair-status"
-        >🔴 Waiting for pair connection...</label
-      >
+    <div class="main">
+      <p class="ws-connection">
+        WebSocket Connection:
+        <span id="status"> Unsuccessful </span>
+      </p>
       <div>
-        <input type="file" name="file" id="file" />
-        <button type="submit" id="upload">Upload</button>
+        <label for="button" id="pair-status"
+          >🔴 Waiting for pair connection...</label
+        >
+        <div class="pair">
+          <p id="pair-name"></p>
+        </div>
+        <div class="upload-container">
+          <div class="upload-area">
+            <input type="file" name="file" id="file" class="file-selector" />
+            <label for="file">
+              <img
+                src="https://img.icons8.com/material/96/bfc1c2/upload--v1.png"
+              />
+              <p>Select a file to upload</p>
+            </label>
+          </div>
+
+          <button disabled="true" type="submit" id="upload-button" class="btn">
+            Upload
+          </button>
+        </div>
       </div>
     </div>
+    <div id="me"></div>
   </body>
-  <script src="./script.js"></script>
+  <script type="module" src="scripts/script.js"></script>
 </html>
