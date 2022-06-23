@@ -27,7 +27,7 @@ Privacy was an important focus during this project. All file transfers are peer 
 
 Feel free to send feedback on [Twitter](https://twitter.com/mmvvpp123) or [file an issue](https://github.com/nimatullo/parachute/issues/new). Feature requests are always welcome.
 
-## Host Your Own Instance
+## Run Your Own Instance
 
 Clone this repository
 ```sh
