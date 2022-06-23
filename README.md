@@ -12,7 +12,7 @@
 ## Table of Contents
 
 - [Built With](#build-with)
-- [Privacy](#features)
+- [Privacy](#privacy)
 - [Feedback](#feedback)
 
 ## Built With
