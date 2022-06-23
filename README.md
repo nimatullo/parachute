@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  A web-based AirDrop alternative.
+  A web-based AirDrop alternative. <a href="https://parachute-testing.herokuapp.com">Try the testing server</a>
 </p>
 
 ## Table of Contents
