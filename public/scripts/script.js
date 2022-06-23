@@ -20,8 +20,66 @@ window.addEventListener("load", () => {
     } else {
       label.innerHTML = labelVal;
     }
+
+    showPreview(fileSelector.files[0]);
   });
+
+  initListeners();
 });
+
+function showPreview(file) {
+  // Only preview if file is an image
+  var img = document.getElementById("preview");
+  img.src = "";
+  if (!file.type.startsWith("image/")) return;
+  var reader = new FileReader();
+  reader.onload = function (e) {
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+let uploadArea = document.getElementsByClassName("upload-area")[0];
+function initListeners() {
+  ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+    uploadArea.addEventListener(eventName, preventDefaults, false);
+  });
+
+  ["dragenter", "dragover"].forEach((eventName) => {
+    uploadArea.addEventListener(eventName, highlight, false);
+  });
+
+  ["dragleave", "drop"].forEach((eventName) => {
+    uploadArea.addEventListener(eventName, unhighlight, false);
+  });
+
+  uploadArea.addEventListener("drop", dropHandler, false);
+}
+
+function highlight(e) {
+  uploadArea.classList.add("highlight");
+}
+
+function unhighlight(e) {
+  uploadArea.classList.remove("highlight");
+}
+
+function preventDefaults(e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+function dropHandler(e) {
+  const fileInput = document.getElementById("file");
+
+  let dt = e.dataTransfer;
+  let files = dt.files;
+
+  if (files.length > 0) {
+    fileInput.files = files;
+    fileInput.dispatchEvent(new Event("change"));
+  }
+}
 
 window.addEventListener("beforeunload", () => connections.disconnect());
 
