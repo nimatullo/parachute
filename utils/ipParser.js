@@ -4,7 +4,7 @@ class IpParser {
     if (req.headers["x-forwarded-for"]) {
       ip = req.headers["x-forwarded-for"];
     } else {
-      ip = req.connection.remoteAddress;
+      ip = req.socket.remoteAddress;
     }
 
     // Check if IP is localhost
