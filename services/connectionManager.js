@@ -19,10 +19,6 @@ class ConnectionManager {
     );
 
     this.startHeartbeat(connection, remoteAddress);
-
-    // If a pair has 2 connections, let them know that they are ready
-    if (this.connections[remoteAddress].isReady())
-      this.emitReady(this.connections[remoteAddress]);
   }
 
   addToConnections(socket, remoteAddress) {
@@ -66,6 +62,10 @@ class ConnectionManager {
 
   updateDeviceInfo(deviceInfo, origin, id) {
     this.connections[origin].getById(id).device = deviceInfo;
+
+    // If a pair has 2 connections, let them know that they are ready
+    if (this.connections[origin].isReady())
+      this.emitReady(this.connections[origin]);
   }
 
   emitReady(pair) {

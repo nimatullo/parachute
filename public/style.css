@@ -1,9 +1,10 @@
 :root {
-  --main-bg-color: #cdcdcd;
+  --main-bg-color: #e9e8e8;
   --btn-bg-color: #fefefe;
   --btn-fnt-color: #2e2f33;
   --btn-border: #e8e8e8;
   --hover-color: #276efa;
+  --secondary-gray: #747577;
 }
 
 .file-selector {
@@ -74,6 +75,8 @@ body {
   padding: 1em;
   background-color: #fff;
   border-radius: 5px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  margin: 1em 0;
 }
 
 .upload-area {
@@ -85,4 +88,27 @@ body {
 .upload-area:hover {
   cursor: pointer;
   border-color: var(--hover-color);
+}
+
+.pair {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pair .icon {
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 1em;
+  display: grid;
+  place-items: center;
+}
+
+.ws-connection {
+  visibility: hidden;
+}
+
+#me {
+  color: var(--secondary-gray);
 }

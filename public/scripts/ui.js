@@ -4,7 +4,8 @@ class UI {
     this.uploadButton = document.getElementById("upload-button");
     this.pairStatus = document.getElementById("pair-status");
     this.me = document.getElementById("me");
-    this.device = document.getElementById("device");
+    this.pairDevice = document.getElementById("device");
+    this.pairName = document.getElementById("pair-name");
   }
 
   updateWebSocketStatus() {
@@ -12,8 +13,7 @@ class UI {
   }
 
   setDevice(device) {
-    const div = document.createElement("div");
-    div.className = "device";
+    const pairDiv = document.getElementsByClassName("pair")[0];
 
     const icon = document.createElement("div");
     icon.className = "icon";
@@ -23,10 +23,8 @@ class UI {
     name.className = "name";
     name.innerHTML = device.device;
 
-    div.appendChild(icon);
-    div.appendChild(name);
-
-    this.device.appendChild(div);
+    pairDiv.appendChild(icon);
+    pairDiv.appendChild(name);
   }
 
   startDownload(file, filename) {
@@ -38,18 +36,30 @@ class UI {
 
   ready(pairName, upload) {
     this.uploadButton.disabled = false;
-    this.pairStatus.innerHTML = `✅ Ready. Paired with <strong>${pairName}</strong>`;
+    this.pairStatus.innerHTML = "";
+    this.pairName.innerHTML = `Paired with <strong>${pairName}</strong>`;
     this.uploadButton.addEventListener("click", upload);
   }
 
+  // TODO: Redo this function
   unready() {
     this.uploadButton.disabled = true;
     this.pairStatus.innerHTML = "🔴 Waiting for pair connection...";
+    const pairDiv = document.getElementsByClassName("pair")[0];
+    pairDiv.innerHTML = "";
+
+    const p = document.createElement("p");
+    p.id = "pair-name";
+
+    pairDiv.appendChild(p);
+
+    this.pairName = p;
   }
 
   setName(name) {
     this.name = name;
     this.me.innerHTML = `You are ${name}`;
+    document.title += ` | ${name}`;
   }
 
   // Get device type and browser name
@@ -91,11 +101,11 @@ class UI {
   getDeviceIcon(type) {
     switch (type) {
       case "mobile":
-        return '<img src="https://img.icons8.com/material/96/000000/iphone-x.png"/>';
+        return '<img src="https://img.icons8.com/material/96/276efa/iphone-x.png"/>';
       case "desktop":
-        return '<img src="https://img.icons8.com/material/96/000000/monitor--v1.png"/>';
+        return '<img src="https://img.icons8.com/material/96/276efa/monitor--v1.png"/>';
       default:
-        return '<img src="https://img.icons8.com/material/96/000000/help--v1.png"/>';
+        return '<img src="https://img.icons8.com/material/96/276efa/help--v1.png"/>';
     }
   }
 }
