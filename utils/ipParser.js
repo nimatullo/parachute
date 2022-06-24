@@ -1,9 +1,8 @@
 class IpParser {
   static parse(req) {
     let ip = "";
-    if (req.headers["x-forwarded-for"]) {
-      console.log("x-forwarded-for", req.headers["x-forwarded-for"]);
-      ip = req.headers["x-forwarded-for"];
+    if (req.headers["cf-connecting-ip"]) {
+      ip = req.headers["cf-connecting-ip"];
     } else {
       ip = req.socket.remoteAddress;
     }
