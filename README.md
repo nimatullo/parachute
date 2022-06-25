@@ -12,7 +12,7 @@
 ## Table of Contents
 
 - [Built With](#build-with)
-- [How Does It Work](#how)
+- [How Does It Work](#how-does-it-work)
 - [Privacy](#privacy)
 - [Feedback](#feedback)
 
