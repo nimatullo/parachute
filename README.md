@@ -1,7 +1,11 @@
 <h1 align="center"> Parachute </h1> <br>
+
+<p align="center">
+ <img alt="Heroku CI" src="https://pyheroku-badge.herokuapp.com/?app=parachute-share"/>
+
 <p align="center">
   <a href="https://parachute-share.herokuapp.com/">
-    <img alt="Parachute" title="Parachute" src="https://i.imgur.com/wGC8z0k.jpg" width="250">
+    <img alt="Parachute" title="Parachute" src="https://i.imgur.com/wGC8z0k.jpg" width="250"/>
   </a>
 </p>
 
