@@ -6,6 +6,7 @@ class UI {
     this.me = document.getElementById("me");
     this.pairDevice = document.getElementById("device");
     this.pairName = document.getElementById("pair-name");
+    this.fileSelector = new FileSelector();
   }
 
   updateWebSocketStatus() {
@@ -41,10 +42,17 @@ class UI {
     this.uploadButton.addEventListener("click", upload);
   }
 
-  // TODO: Redo this function
   unready() {
+    this.showDisabledState();
+    this.clearConnectedPair();    
+  }
+
+  showDisabledState() {
     this.uploadButton.disabled = true;
     this.pairStatus.innerHTML = "🔴 Waiting for pair connection...";
+  }
+
+  clearConnectedPair() {
     const pairDiv = document.getElementsByClassName("pair")[0];
     pairDiv.innerHTML = "";
 
@@ -106,6 +114,87 @@ class UI {
         return '<img src="https://img.icons8.com/material/96/276efa/monitor--v1.png"/>';
       default:
         return '<img src="https://img.icons8.com/material/96/276efa/help--v1.png"/>';
+    }
+  }
+}
+
+class FileSelector {
+  constructor() {
+    this.uploadArea = document.getElementsByClassName("upload-area")[0];
+    this.setupFileSelectorLabels();
+  }
+
+  setupFileSelectorLabels() {
+    const fileSelector = document.getElementById("file");
+
+    var label = fileSelector.nextElementSibling, labelVal = label.innerHTML;
+
+    fileSelector.addEventListener("change", e => {
+      var filename = "";
+
+      if (fileSelector.files.length > 0) {
+        filename = fileSelector.files[0].name;
+      }
+
+      if (filename) label.innerHTML = filename;
+      else label.innerHTML = labelVal;
+
+      this.showPreview(fileSelector.files[0]);
+    });
+
+    this.initializeFileUploadListeners();
+  }
+
+  showPreview(file) {
+    // Only preview if file is an image
+    var img = document.getElementById("preview");
+    img.src = "";
+    if (!file.type.startsWith("image/")) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  initializeFileUploadListeners() {
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+      this.uploadArea.addEventListener(eventName, this.preventDefaults, false);
+    });
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+      this.uploadArea.addEventListener(eventName, this.highlight, false);
+    });
+
+    ["dragleave", "drop"].forEach((eventName) => {
+      this.uploadArea.addEventListener(eventName, this.unhighlight, false);
+    });
+
+    this.uploadArea.addEventListener("drop", this.dropHandler, false);
+  }
+
+  highlight(e) {
+    this.uploadArea.classList.add("highlight");
+  }
+
+  unhighlight(e) {
+    this.uploadArea.classList.remove("highlight");
+  }
+
+  preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  dropHandler(e) {
+    const fileInput = document.getElementById("file");
+
+    let dt = e.dataTransfer;
+    let files = dt.files;
+
+    if (files.length > 0) {
+      fileInput.files = files;
+      fileInput.dispatchEvent(new Event("change"));
     }
   }
 }
