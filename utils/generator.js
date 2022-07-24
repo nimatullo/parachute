@@ -7,7 +7,7 @@ function getRandomInt(min, max) {
 }
 
 const generateName = () => {
-  var name1 = [
+  const name1 = [
     "abandoned",
     "able",
     "absolute",
@@ -1358,7 +1358,7 @@ const generateName = () => {
     "rocky",
   ];
 
-  var name2 = [
+  const name2 = [
     "Canidae",
     "Felidae",
     "Cat",
@@ -1737,11 +1737,7 @@ const generateName = () => {
     "Yak",
   ];
 
-  var name =
-    capFirst(name1[getRandomInt(0, name1.length + 1)]) +
-    " " +
-    capFirst(name2[getRandomInt(0, name2.length + 1)]);
-  return name;
+  return capFirst(name1[getRandomInt(0, name1.length + 1)]) + " " + capFirst(name2[getRandomInt(0, name2.length + 1)]);
 };
 
 module.exports = generateName;
