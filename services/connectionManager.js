@@ -22,7 +22,7 @@ class ConnectionManager {
   }
 
   addToConnections(socket, remoteAddress) {
-    var pair;
+    let pair;
     if (!this.connections[remoteAddress]) {
       pair = new Pair(socket);
       this.connections[remoteAddress] = pair;

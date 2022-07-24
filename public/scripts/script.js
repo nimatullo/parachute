@@ -1,6 +1,6 @@
-import SocketClientManager from "./socket.js";
+import SocketClientManager from "./SocketClientManager.js";
 
-var connections = null;
+let connections = null;
 
 window.addEventListener("load", () => {
   connections = new SocketClientManager(getWSEndpoint());

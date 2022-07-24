@@ -127,10 +127,10 @@ class FileSelector {
   setupFileSelectorLabels() {
     const fileSelector = document.getElementById("file");
 
-    var label = fileSelector.nextElementSibling, labelVal = label.innerHTML;
+    const label = fileSelector.nextElementSibling, labelVal = label.innerHTML;
 
     fileSelector.addEventListener("change", e => {
-      var filename = "";
+      let filename = "";
 
       if (fileSelector.files.length > 0) {
         filename = fileSelector.files[0].name;
@@ -147,10 +147,10 @@ class FileSelector {
 
   showPreview(file) {
     // Only preview if file is an image
-    var img = document.getElementById("preview");
+    const img = document.getElementById("preview");
     img.src = "";
     if (!file.type.startsWith("image/")) return;
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = function (e) {
       img.src = e.target.result;
     };
@@ -173,11 +173,11 @@ class FileSelector {
     this.uploadArea.addEventListener("drop", this.dropHandler, false);
   }
 
-  highlight(e) {
+  highlight() {
     this.uploadArea.classList.add("highlight");
   }
 
-  unhighlight(e) {
+  unhighlight() {
     this.uploadArea.classList.remove("highlight");
   }
 

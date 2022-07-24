@@ -16,7 +16,7 @@ app.use(express.static("public"));
 
 app.use("/", socketController.router);
 
-app.use("/", (req, res) => {
+app.use("/", (_req, res) => {
   res.writeHead(200, { "Content-Type": "text/html" });
   fs.createReadStream("public/index.html").pipe(res);
 });
