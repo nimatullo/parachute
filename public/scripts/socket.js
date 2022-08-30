@@ -35,6 +35,9 @@ class SocketClientManager {
       case "file":
         if (message.from !== this.id) this.handleDownload(message.data);
         break;
+      case "download-complete":
+        if (message.from !== this.id) this._ui.transferComplete();
+        break;
       case "new-connection":
         this.handleNewConnection(message.connectionInfo);
         break;
@@ -72,6 +75,7 @@ class SocketClientManager {
     const bytes = new Uint8Array(file.blob.data);
     const blob = new Blob([bytes], { type: file.mime });
     this._ui.startDownload(blob, file.name);
+    this.ws.send(JSON.stringify({ type: "download-complete", from: this.id }));
   }
 
   handleNewConnection(connectionInfo) {
