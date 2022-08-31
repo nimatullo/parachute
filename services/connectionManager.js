@@ -55,6 +55,11 @@ class ConnectionManager {
       case "device-info":
         this.updateDeviceInfo(message.deviceInfo, origin, message.from);
         break;
+      case "download-complete":
+        this.send(
+          { type: "file-transfer-success", from: message.from },
+          this.connections[origin].getPeer(message.from)
+        );
       default:
         console.log("Unknown message type", message.type);
     }
