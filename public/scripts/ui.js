@@ -6,6 +6,10 @@ class UI {
     this.me = document.getElementById("me");
     this.pairDevice = document.getElementById("device");
     this.pairName = document.getElementById("pair-name");
+    this.fileTransferStatus = document.getElementById("file-transfer-status");
+    this.loading = document.getElementsByClassName("loading")[0];
+    this.uploadContainer =
+      document.getElementsByClassName("upload-container")[0];
     this.fileSelector = new FileSelector();
   }
 
@@ -35,16 +39,27 @@ class UI {
     a.click();
   }
 
+  transferComplete() {
+    this.fileTransferStatus.innerHTML = "File transfer complete!";
+    this.hideProgressIndicator();
+  }
+
+  transferFailed() {
+    this.fileTransferStatus.innerHTML = "File transfer failed!";
+    this.hideProgressIndicator();
+  }
+
   ready(pairName, upload) {
     this.uploadButton.disabled = false;
     this.pairStatus.innerHTML = "";
     this.pairName.innerHTML = `Paired with <strong>${pairName}</strong>`;
     this.uploadButton.addEventListener("click", upload);
+    this.uploadButton.innerHTML = "Upload";
   }
 
   unready() {
     this.showDisabledState();
-    this.clearConnectedPair();    
+    this.clearConnectedPair();
   }
 
   showDisabledState() {
@@ -116,6 +131,16 @@ class UI {
         return '<img src="https://img.icons8.com/material/96/276efa/help--v1.png"/>';
     }
   }
+
+  showProgressIndicator() {
+    this.loading.style.display = "inline-block";
+    this.uploadContainer.style.visibility = "hidden";
+  }
+
+  hideProgressIndicator() {
+    this.loading.style.display = "none";
+    this.uploadContainer.style.visibility = "visible";
+  }
 }
 
 class FileSelector {
@@ -127,9 +152,10 @@ class FileSelector {
   setupFileSelectorLabels() {
     const fileSelector = document.getElementById("file");
 
-    const label = fileSelector.nextElementSibling, labelVal = label.innerHTML;
+    const label = fileSelector.nextElementSibling,
+      labelVal = label.innerHTML;
 
-    fileSelector.addEventListener("change", e => {
+    fileSelector.addEventListener("change", (e) => {
       let filename = "";
 
       if (fileSelector.files.length > 0) {
