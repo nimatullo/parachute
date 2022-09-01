@@ -7,15 +7,17 @@ class IpParser {
       ip = req.socket.remoteAddress;
     }
 
+    console.log(`Incoming connection from ${ip}`);
+
     // Check if IP is localhost
     if (ip === "::1" || ip === "::ffff:127.0.0.1") {
       ip = "127.0.0.1";
     }
 
     // Check if IP is private
-    if (IpParser.isIpPrivate(ip)) {
-      ip = "priv";
-    }
+    //if (IpParser.isIpPrivate(ip)) {
+    //  ip = "priv";
+    //}
 
     return ip;
   }

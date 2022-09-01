@@ -8,7 +8,6 @@ class ConnectionManager {
 
   onConnection(socket, request) {
     const remoteAddress = IpParser.parse(request);
-    console.log("New incoming connection", remoteAddress);
 
     const connection = this.addToConnections(socket, remoteAddress);
     socket.on("message", (message) => this.onMessage(remoteAddress, message));
