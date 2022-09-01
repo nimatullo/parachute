@@ -10,6 +10,7 @@ class UI {
     this.loading = document.getElementsByClassName("loading")[0];
     this.uploadContainer =
       document.getElementsByClassName("upload-container")[0];
+    this.fileSelector = new FileSelector();
   }
 
   updateWebSocketStatus() {
@@ -56,10 +57,17 @@ class UI {
     this.uploadButton.innerHTML = "Upload";
   }
 
-  // TODO: Redo this function
   unready() {
+    this.showDisabledState();
+    this.clearConnectedPair();
+  }
+
+  showDisabledState() {
     this.uploadButton.disabled = true;
     this.pairStatus.innerHTML = "🔴 Waiting for pair connection...";
+  }
+
+  clearConnectedPair() {
     const pairDiv = document.getElementsByClassName("pair")[0];
     pairDiv.innerHTML = "";
 
@@ -132,6 +140,88 @@ class UI {
   hideProgressIndicator() {
     this.loading.style.display = "none";
     this.uploadContainer.style.visibility = "visible";
+  }
+}
+
+class FileSelector {
+  constructor() {
+    this.uploadArea = document.getElementsByClassName("upload-area")[0];
+    this.setupFileSelectorLabels();
+  }
+
+  setupFileSelectorLabels() {
+    const fileSelector = document.getElementById("file");
+
+    const label = fileSelector.nextElementSibling,
+      labelVal = label.innerHTML;
+
+    fileSelector.addEventListener("change", (e) => {
+      let filename = "";
+
+      if (fileSelector.files.length > 0) {
+        filename = fileSelector.files[0].name;
+      }
+
+      if (filename) label.innerHTML = filename;
+      else label.innerHTML = labelVal;
+
+      this.showPreview(fileSelector.files[0]);
+    });
+
+    this.initializeFileUploadListeners();
+  }
+
+  showPreview(file) {
+    // Only preview if file is an image
+    const img = document.getElementById("preview");
+    img.src = "";
+    if (!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  initializeFileUploadListeners() {
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+      this.uploadArea.addEventListener(eventName, this.preventDefaults, false);
+    });
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+      this.uploadArea.addEventListener(eventName, this.highlight, false);
+    });
+
+    ["dragleave", "drop"].forEach((eventName) => {
+      this.uploadArea.addEventListener(eventName, this.unhighlight, false);
+    });
+
+    this.uploadArea.addEventListener("drop", this.dropHandler, false);
+  }
+
+  highlight() {
+    this.uploadArea.classList.add("highlight");
+  }
+
+  unhighlight() {
+    this.uploadArea.classList.remove("highlight");
+  }
+
+  preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  dropHandler(e) {
+    const fileInput = document.getElementById("file");
+
+    let dt = e.dataTransfer;
+    let files = dt.files;
+
+    if (files.length > 0) {
+      fileInput.files = files;
+      fileInput.dispatchEvent(new Event("change"));
+    }
   }
 }
 
