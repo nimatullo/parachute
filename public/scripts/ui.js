@@ -11,6 +11,7 @@ class UI {
     this.uploadContainer =
       document.getElementsByClassName("upload-container")[0];
     this.fileSelector = new FileSelector();
+    this.transferPercentText = document.getElementById("transfer-percent");
   }
 
   updateWebSocketStatus() {
@@ -39,14 +40,14 @@ class UI {
     a.click();
   }
 
-  transferComplete() {
-    this.fileTransferStatus.innerHTML = "File transfer complete!";
+  fileTransferComplete() {
+    this.setFileTransferStatus("File transfer complete!", "success");
     this.hideProgressIndicator();
   }
 
-  transferFailed() {
-    this.fileTransferStatus.innerHTML = "File transfer failed!";
-    this.hideProgressIndicator();
+  setFileTransferStatus(status, type) {
+    this.fileTransferStatus.innerHTML = status;
+    this.fileTransferStatus.className = type;
   }
 
   ready(pairName, upload) {
@@ -140,6 +141,18 @@ class UI {
   hideProgressIndicator() {
     this.loading.style.display = "none";
     this.uploadContainer.style.visibility = "visible";
+  }
+
+  updateTransferPercent(percent) {
+    if (percent === 100) {
+      this.transferPercentText.innerHTML = "";
+      this.setFileTransferStatus(
+        "File upload complete. Waiting for peer to finish download...",
+        "info"
+      );
+    } else {
+      this.transferPercentText.innerHTML = percent;
+    }
   }
 }
 

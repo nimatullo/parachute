@@ -36,7 +36,7 @@ class SocketClientManager {
         if (message.from !== this.id) this.handleDownload(message.data);
         break;
       case "file-transfer-success":
-        if (message.from !== this.id) this._ui.transferComplete();
+        if (message.from !== this.id) this._ui.fileTransferComplete();
         break;
       case "new-connection":
         this.handleNewConnection(message.connectionInfo);
@@ -102,20 +102,34 @@ class SocketClientManager {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch("/upload", {
-      method: "POST",
-      body: formData,
-      headers: {
-        "X-Origin-Id": this.id, // Let the server know who sent this
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    var req = new XMLHttpRequest();
+    req.upload.addEventListener("progress", this.progressHandler.bind(this));
+
+    req.open("POST", "/upload");
+    req.setRequestHeader("X-Origin-Id", this.id);
+    req.send(formData);
+
+    //   fetch("/upload", {
+    //     method: "POST",
+    //     body: formData,
+    //     headers: {
+    //       "X-Origin-Id": this.id, // Let the server know who sent this
+    //     },
+    //   })
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       console.log(data);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // }
+  }
+
+  progressHandler(event) {
+    this._ui.updateTransferPercent(
+      Math.round((event.loaded / event.total) * 100)
+    );
   }
 }
 
