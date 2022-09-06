@@ -44,6 +44,7 @@
   text-align: center;
   border-radius: 5px;
   border: 1px solid transparent;
+  padding: 5px;
 }
 
 #file-transfer-status.success {
@@ -131,6 +132,10 @@ body {
   margin: 1em 0;
 }
 
+.upload-text {
+  text-align: center;
+}
+
 .upload-area {
   border: 2px dashed #c3c3c3;
   border-radius: 5px;
@@ -204,6 +209,31 @@ small {
 .loading div:nth-child(2) {
   animation-delay: -0.5s;
 }
+
+.download-area {
+  display: none;
+  place-items: center;
+
+  margin-bottom: 1em;
+}
+
+#download-button {
+  display: none;
+  background-color: #198754;
+  border-color: #146c43;
+  color: #fff;
+}
+
+#download-button:hover {
+  border-color: #00df86;
+}
+
+span#filename {
+  color: var(--secondary-gray);
+  font-weight: lighter;
+  text-align: center;
+}
+
 @keyframes loading {
   0% {
     top: 36px;

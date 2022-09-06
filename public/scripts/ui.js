@@ -33,11 +33,71 @@ class UI {
     pairDiv.appendChild(name);
   }
 
+  displayDownloadDiv(file, filename) {
+    this.displayFileIcon(filename);
+
+    const uploadArea = document.getElementsByClassName("upload-area")[0];
+    uploadArea.style.display = "none";
+    this.uploadButton.style.display = "none";
+
+    const downloadArea = document.getElementsByClassName("download-area")[0];
+    downloadArea.style.display = "grid";
+
+    const fileNameHTML = document.querySelector("span#filename");
+
+    fileNameHTML.innerHTML = filename;
+
+    const downloadButton = document.getElementById("download-button");
+    downloadButton.addEventListener("click", () =>
+      this.startDownload(file, filename)
+    );
+    downloadButton.style.display = "inline-block";
+  }
+
   startDownload(file, filename) {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(file);
     a.download = filename;
     a.click();
+
+    this.showUploadArea();
+  }
+
+  displayFileIcon(filename) {
+    let fileExtension = filename.split(".").pop();
+
+    // Ew, fuck it. brute force if statement
+    if (
+      fileExtension === "jpg" ||
+      fileExtension === "jpeg" ||
+      fileExtension === "png" ||
+      fileExtension === "gif" ||
+      fileExtension === "bmp" ||
+      fileExtension === "svg"
+    ) {
+      fileExtension = "image";
+    } else if (fileExtension === "pdf") {
+      fileExtension = "pdf";
+    } else {
+      fileExtension = "file";
+    }
+
+    const icon = document.getElementById("file-icon");
+
+    icon.src = `https://img.icons8.com/material/96/bfc1c2/${fileExtension}.png`;
+  }
+
+  showUploadArea() {
+    const uploadArea = document.getElementsByClassName("upload-area")[0];
+    uploadArea.style.display = "grid";
+
+    const downloadArea = document.getElementsByClassName("download-area")[0];
+    downloadArea.style.display = "none";
+
+    this.uploadButton.style.display = "inline-block";
+
+    const downloadButton = document.getElementById("download-button");
+    downloadButton.style.display = "none";
   }
 
   fileTransferComplete() {
@@ -46,6 +106,8 @@ class UI {
   }
 
   setFileTransferStatus(status, type) {
+    this.hideProgressIndicator();
+    this.transferPercentText.innerHTML = "";
     this.fileTransferStatus.innerHTML = status;
     this.fileTransferStatus.className = type;
   }
@@ -144,15 +206,7 @@ class UI {
   }
 
   updateTransferPercent(percent) {
-    if (percent === 100) {
-      this.transferPercentText.innerHTML = "";
-      this.setFileTransferStatus(
-        "File upload complete. Waiting for peer to finish download...",
-        "info"
-      );
-    } else {
-      this.transferPercentText.innerHTML = percent;
-    }
+    this.transferPercentText.innerHTML = percent;
   }
 }
 

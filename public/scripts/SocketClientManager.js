@@ -74,7 +74,7 @@ class SocketClientManager {
   handleDownload(file) {
     const bytes = new Uint8Array(file.blob.data);
     const blob = new Blob([bytes], { type: file.mime });
-    this._ui.startDownload(blob, file.name);
+    this._ui.displayDownloadDiv(blob, file.name);
     this.ws.send(JSON.stringify({ type: "download-complete", from: this.id }));
   }
 
@@ -96,6 +96,10 @@ class SocketClientManager {
 
     if (!file) {
       this._ui.hideProgressIndicator();
+      this._ui.setFileTransferStatus(
+        "Please select a file before attemping to upload.",
+        "error"
+      );
       return;
     }
 
@@ -106,29 +110,26 @@ class SocketClientManager {
     req.upload.addEventListener("progress", this.progressHandler.bind(this));
 
     req.open("POST", "/upload");
-    req.setRequestHeader("X-Origin-Id", this.id);
+    req.setRequestHeader("X-Origin-Id", this.id); // Let the server know who sent this
+    req.addEventListener("load", () => {
+      if (req.status !== 200) {
+        this._ui.setFileTransferStatus(
+          "Error uploading file! Please try again",
+          "error"
+        );
+      } else {
+        this._ui.setFileTransferStatus(
+          "File upload complete. Waiting for peer to finish download...",
+          "info"
+        );
+      }
+    });
     req.send(formData);
-
-    //   fetch("/upload", {
-    //     method: "POST",
-    //     body: formData,
-    //     headers: {
-    //       "X-Origin-Id": this.id, // Let the server know who sent this
-    //     },
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log(data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }
   }
 
   progressHandler(event) {
     this._ui.updateTransferPercent(
-      Math.round((event.loaded / event.total) * 100)
+      `${Math.round((event.loaded / event.total) * 100)}%`
     );
   }
 }

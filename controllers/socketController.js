@@ -8,7 +8,18 @@ router.post("/upload", (req, res) => {
   const originIp = IpParser.parse(req);
   const originId = req.headers["x-origin-id"];
 
+  if (!originId) {
+    res.status(400).send("Missing origin id");
+    return;
+  }
+
   const file = req.files.file;
+
+  if (!file) {
+    res.status(400).send("Missing file");
+    return;
+  }
+
   const fileName = file.name;
 
   const data = {
