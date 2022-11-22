@@ -17,10 +17,16 @@
         WebSocket Connection:
         <span id="status"> Unsuccessful </span>
       </p>
-      <div>
-        <label for="button" id="pair-status"
-          >🔴 Waiting for pair connection...</label
-        >
+      <div class="custom-room-container hidden">
+        <h2 id="room-id-header">
+        </h2>
+        <input
+          type="text"
+          placeholder="Room ID"
+          id="room-textfield"
+          />
+          <button id="change-room-btn" class="outline">Change room</button>
+      </div>
         <div class="pair">
           <p id="pair-name"></p>
         </div>
@@ -69,6 +75,10 @@
       </div>
     </div>
     <div id="me"></div>
+    <p class="info">
+      Go to this website on another device that is on the same network or
+      <span id="custom-room-toggle">create a custom room.</span>
+    </p>
   </body>
   <script type="module" src="scripts/script.js"></script>
 </html>

@@ -20,7 +20,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .file-selector {
@@ -69,6 +69,10 @@ html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  position: relative;
+  height: 100%;
+
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 button.btn {
@@ -79,7 +83,9 @@ button.btn {
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
+  width: 100%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  line-height: 1.2;
 
   transition: all 0.2s ease-in-out;
 }
@@ -125,11 +131,13 @@ body {
 .upload-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 1em;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   margin: 1em 0;
+  width: 100%;
 }
 
 .upload-text {
@@ -137,6 +145,7 @@ body {
 }
 
 .upload-area {
+  width: 100%;
   border: 2px dashed #c3c3c3;
   border-radius: 5px;
   margin-bottom: 1em;
@@ -219,19 +228,82 @@ small {
 
 #download-button {
   display: none;
-  background-color: #198754;
-  border-color: #146c43;
+  background-color: #38a169;
   color: #fff;
+  border: 1px solid #38a169;
 }
 
 #download-button:hover {
-  border-color: #00df86;
+  background-color: #2f855a;
 }
 
 span#filename {
   color: var(--secondary-gray);
   font-weight: lighter;
   text-align: center;
+}
+
+#custom-room-toggle {
+  color: var(--hover-color);
+  cursor: pointer;
+}
+
+#custom-room-toggle:hover {
+  text-decoration: underline;
+}
+
+.custom-room-container {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+
+  background-color: white;
+  padding: 1em;
+  border-radius: 5px;
+  border: 1px solid var(--btn-border);
+}
+
+.custom-room-container > * {
+  margin: 0;
+}
+
+#room-textfield {
+  margin-bottom: 1em;
+  background-color: #fff;
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  box-shadow: inset 0 1px 3px #ddd;
+
+  transition: all 0.2s ease-in-out;
+}
+
+.outline {
+  background-color: var(--btn-bg-color);
+  color: var(--btn-fnt-color);
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.outline:hover {
+  border-color: var(--hover-color);
+}
+
+.info {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+
+  color: var(--secondary-gray);
 }
 
 @keyframes loading {

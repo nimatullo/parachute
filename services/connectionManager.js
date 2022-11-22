@@ -9,6 +9,8 @@ class ConnectionManager {
   onConnection(socket, request) {
     const remoteAddress = IpParser.parse(request);
 
+    console.log("New connection from", remoteAddress);
+
     const connection = this.addToConnections(socket, remoteAddress);
     socket.on("message", (message) => this.onMessage(remoteAddress, message));
 
@@ -33,6 +35,7 @@ class ConnectionManager {
   }
 
   removeConnection(id, origin) {
+    if (!this.connections[origin]) return;
     const leftOverConnection = this.connections[origin].removeConnection(id);
 
     if (!leftOverConnection) {

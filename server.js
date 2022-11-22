@@ -24,9 +24,10 @@ app.use("/", (_req, res) => {
 const server = http.createServer(app);
 
 const wss = new WebSocket.Server({ server });
-wss.on("connection", (socket, req) =>
-  socketController.manager.onConnection(socket, req)
-);
+wss.on("connection", (socket, req) => {
+  // Get the custom room id if the request url has customRoom query param
+  socketController.manager.onConnection(socket, req);
+});
 
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 

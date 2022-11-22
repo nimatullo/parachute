@@ -2,7 +2,6 @@ class UI {
   constructor() {
     this.status = document.getElementById("status");
     this.uploadButton = document.getElementById("upload-button");
-    this.pairStatus = document.getElementById("pair-status");
     this.me = document.getElementById("me");
     this.pairDevice = document.getElementById("device");
     this.pairName = document.getElementById("pair-name");
@@ -12,6 +11,20 @@ class UI {
       document.getElementsByClassName("upload-container")[0];
     this.fileSelector = new FileSelector();
     this.transferPercentText = document.getElementById("transfer-percent");
+    this.customRoomToggle = document.getElementById("custom-room-toggle");
+    this.initializeEventListeners();
+  }
+
+  initializeEventListeners() {
+    this.customRoomToggle.addEventListener(
+      "click",
+      this.handleCustomRoomToggle
+    );
+  }
+
+  handleCustomRoomToggle() {
+    const customRoomDiv = document.querySelector("div.custom-room-container");
+    customRoomDiv.classList.toggle("hidden");
   }
 
   updateWebSocketStatus() {
@@ -114,7 +127,6 @@ class UI {
 
   ready(pairName, upload) {
     this.uploadButton.disabled = false;
-    this.pairStatus.innerHTML = "";
     this.pairName.innerHTML = `Paired with <strong>${pairName}</strong>`;
     this.uploadButton.addEventListener("click", upload);
     this.uploadButton.innerHTML = "Upload";
@@ -127,7 +139,7 @@ class UI {
 
   showDisabledState() {
     this.uploadButton.disabled = true;
-    this.pairStatus.innerHTML = "🔴 Waiting for pair connection...";
+    this.uploadButton.innerHTML = "Pair connection needed";
   }
 
   clearConnectedPair() {
@@ -145,7 +157,7 @@ class UI {
   setName(name) {
     this.name = name;
     this.me.innerHTML = `You are ${name}`;
-    document.title += ` | ${name}`;
+    document.title = `Parachute | ${name}`;
   }
 
   // Get device type and browser name

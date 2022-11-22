@@ -9,8 +9,15 @@ class SocketClientManager {
   }
 
   connect() {
+    console.log("Connecting to server...");
     this.ws.onopen = () => this._ui.updateWebSocketStatus();
     this.ws.onmessage = this.handleIncomingMessage.bind(this);
+  }
+
+  handleRoomChange(url) {
+    this.ws.close();
+    this.ws = new WebSocket(url);
+    this.connect();
   }
 
   sendDeviceInfo() {
@@ -79,7 +86,8 @@ class SocketClientManager {
   }
 
   handleNewConnection(connectionInfo) {
-    if (this.id) return;
+    console.log("New connection:", connectionInfo);
+    // if (this.id) return;
     this.id = connectionInfo.id;
     this._ui.setName(connectionInfo.name);
     this.sendDeviceInfo();
@@ -93,6 +101,7 @@ class SocketClientManager {
     this._ui.showProgressIndicator();
 
     const file = document.getElementById("file").files[0];
+    const roomId = this.ws.url.split("customRoom=")[1];
 
     if (!file) {
       this._ui.hideProgressIndicator();
@@ -111,6 +120,11 @@ class SocketClientManager {
 
     req.open("POST", "/upload");
     req.setRequestHeader("X-Origin-Id", this.id); // Let the server know who sent this
+
+    if (roomId) {
+      req.setRequestHeader("X-Room-Id", roomId);
+    }
+
     req.addEventListener("load", () => {
       if (req.status !== 200) {
         this._ui.setFileTransferStatus(

@@ -7,6 +7,7 @@ const IpParser = require("../utils/ipParser");
 router.post("/upload", (req, res) => {
   const originIp = IpParser.parse(req);
   const originId = req.headers["x-origin-id"];
+  const roomId = req.headers["x-room-id"];
 
   if (!originId) {
     res.status(400).send("Missing origin id");
@@ -35,7 +36,7 @@ router.post("/upload", (req, res) => {
       data: data,
       from: originId,
     },
-    originIp,
+    roomId ? roomId : originIp,
     originId
   );
 
