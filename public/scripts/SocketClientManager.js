@@ -86,8 +86,6 @@ class SocketClientManager {
   }
 
   handleNewConnection(connectionInfo) {
-    console.log("New connection:", connectionInfo);
-    // if (this.id) return;
     this.id = connectionInfo.id;
     this._ui.setName(connectionInfo.name);
     this.sendDeviceInfo();
