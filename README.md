@@ -1,7 +1,7 @@
 <h1 align="center"> Parachute </h1> <br>
 
 <p align="center">
- <img alt="Heroku CI" src="https://pyheroku-badge.herokuapp.com/?app=parachute-share"/>
+ <img alt="Render" src="https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white"/>
 
 <p align="center">
   <a href="https://parachute-share.herokuapp.com/">
