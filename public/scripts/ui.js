@@ -12,10 +12,19 @@ class UI {
       document.getElementsByClassName("upload-container")[0];
     this.fileSelector = new FileSelector();
     this.transferPercentText = document.getElementById("transfer-percent");
+
+    document
+      .getElementById("download-button")
+      .addEventListener("click", this.startDownload.bind(this));
   }
 
   updateWebSocketStatus() {
     this.status.innerHTML = "Connected";
+  }
+
+  setIncomingFile(blob, filename) {
+    this.incomingFile = blob;
+    this.incomingFilename = filename;
   }
 
   setDevice(device) {
@@ -33,8 +42,10 @@ class UI {
     pairDiv.appendChild(name);
   }
 
-  displayDownloadDiv(file, filename) {
-    this.displayFileIcon(filename);
+  displayDownloadDiv(callback) {
+    const downloadButton = document.getElementById("download-button");
+
+    this.displayFileIcon(this.incomingFilename);
 
     const uploadArea = document.getElementsByClassName("upload-area")[0];
     uploadArea.style.display = "none";
@@ -45,21 +56,19 @@ class UI {
 
     const fileNameHTML = document.querySelector("span#filename");
 
-    fileNameHTML.innerHTML = filename;
+    fileNameHTML.innerHTML = this.incomingFilename;
 
-    const downloadButton = document.getElementById("download-button");
-    downloadButton.addEventListener("click", () =>
-      this.startDownload(file, filename)
-    );
     downloadButton.style.display = "inline-block";
+    this.downloadCallback = callback;
   }
 
-  startDownload(file, filename) {
+  startDownload(e) {
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(file);
-    a.download = filename;
+    a.href = URL.createObjectURL(this.incomingFile);
+    a.download = this.incomingFilename;
     a.click();
 
+    this.downloadCallback();
     this.showUploadArea();
   }
 

@@ -10,14 +10,15 @@ class IpParser {
     console.log(`Incoming connection from ${ip}`);
 
     // Check if IP is localhost
+
+    // DEV IP
+    if (ip.includes("192.168")) {
+      return "127.0.0.1";
+    }
+
     if (ip === "::1" || ip === "::ffff:127.0.0.1") {
       ip = "127.0.0.1";
     }
-
-    // Check if IP is private
-    //if (IpParser.isIpPrivate(ip)) {
-    //  ip = "priv";
-    //}
 
     return ip;
   }
