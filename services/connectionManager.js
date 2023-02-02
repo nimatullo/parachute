@@ -33,7 +33,7 @@ class ConnectionManager {
   }
 
   removeConnection(id, origin) {
-    const leftOverConnection = this.connections[origin].removeConnection(id);
+    const leftOverConnection = this.connections[origin]?.removeConnection(id);
 
     if (!leftOverConnection) {
       delete this.connections[origin];
