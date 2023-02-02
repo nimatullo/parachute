@@ -31,6 +31,12 @@ class SocketClientManager {
 
   handleIncomingMessage(evt) {
     const message = JSON.parse(evt.data);
+    console.log(
+      "Incoming message type:",
+      message.type,
+      "from:",
+      message.from || ""
+    );
     switch (message.type) {
       case "file":
         if (message.from !== this.id) this.handleDownload(message.data);
@@ -74,8 +80,12 @@ class SocketClientManager {
   handleDownload(file) {
     const bytes = new Uint8Array(file.blob.data);
     const blob = new Blob([bytes], { type: file.mime });
-    this._ui.displayDownloadDiv(blob, file.name);
-    this.ws.send(JSON.stringify({ type: "download-complete", from: this.id }));
+    this._ui.setIncomingFile(blob, file.name);
+    this._ui.displayDownloadDiv(() => {
+      this.ws.send(
+        JSON.stringify({ type: "download-complete", from: this.id })
+      );
+    });
   }
 
   handleNewConnection(connectionInfo) {
